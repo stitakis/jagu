@@ -1,0 +1,13 @@
+TODO:
+
+task to demostrate and fully automate the java application git updater
+
+1. Add gradle
+2. Create a war with a webstart app with gradle that includes
+    - a git repo with the app jars
+    - jnlp file that start the launcher/bootstraper
+3. Deploy to jetty and start it with gradle
+4. Start the app with robot framework
+5. Create a new war file and deploy it to jetty
+6. The started app should notify that an update is ready and robot should accept to download it
+7. Start the app with robot framework and verify that it is the new version.

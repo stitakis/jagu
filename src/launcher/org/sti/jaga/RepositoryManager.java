@@ -14,4 +14,6 @@ public interface RepositoryManager {
     boolean updateAvailable() throws IOException, GitAPIException;
 
     boolean update() throws IOException, GitAPIException;
+
+    void addUpdateAvailableListener(UpdateAvailableListener updateAvailableListener);
 }

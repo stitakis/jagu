@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class GitRepositoryManagerTest {
 
@@ -22,8 +24,8 @@ public class GitRepositoryManagerTest {
     private String remote = "out//remote-jars-repo_" + TIMESTAMP;
     private String local = "out//local-repo_" + TIMESTAMP;
 
-    private GitRepositoryManager repositoryManager;
-    private GitRepoTestHelper remoteRepo;
+    private static GitRepositoryManager repositoryManager;
+    private static GitRepoTestHelper remoteRepo;
 
     @Before
     public void setup() throws IOException, GitAPIException {
@@ -33,10 +35,11 @@ public class GitRepositoryManagerTest {
             Assert.assertTrue(remote + " not created", created);
         }
 
-        repositoryManager = new GitRepositoryManager(new File(local));
+        if (repositoryManager==null) {
+            repositoryManager = new GitRepositoryManager(new File(local), 2000);
+            cloneRemoteRepository();
+        }
 
-        // this is need for other test
-        cloneRemoteRepository();
     }
 
     private boolean createRemoteRepo() throws IOException, GitAPIException {
@@ -49,7 +52,7 @@ public class GitRepositoryManagerTest {
     }
 
     @Test
-    public void updateLocalRepoIsRemoteIsAhead() throws IOException, GitAPIException {
+    public void updateLocalRepoIfRemoteIsAhead() throws IOException, GitAPIException {
         Assert.assertFalse(repositoryManager.updateAvailable());
 
         // Remove the repo from disc and setup a new again
@@ -69,6 +72,30 @@ public class GitRepositoryManagerTest {
 
         Assert.assertTrue(getFiles(local, ".jar").length == list.length + 1);
     }
+
+
+    @Test
+    public void getNotifiedWhenUpdateIsAvailable() throws IOException, GitAPIException, InterruptedException {
+        Assert.assertFalse(repositoryManager.updateAvailable());
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        repositoryManager.addUpdateAvailableListener(new UpdateAvailableListener() {
+            @Override
+            public void updateAvailable() {
+                latch.countDown();
+            }
+        });
+
+        // add a file to the remote repo
+        remoteRepo.copyAddAndCommit(new File("lib//xz-1.4.jar"));
+
+        latch.await(10, TimeUnit.SECONDS);
+
+        Assert.assertTrue("Update available listener was not notified", latch.getCount()==0);
+
+    }
+
 
     private String[] getFiles(final String folder, final String filenameSuffix) {
         return new File(folder).list(new FilenameFilter() {
