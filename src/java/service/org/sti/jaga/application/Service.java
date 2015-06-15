@@ -1,4 +1,4 @@
-package sti.jaga.application;
+package org.sti.jaga.application;
 
 /**
  * Created by stitakis on 01.06.15.
