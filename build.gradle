@@ -1,6 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
+apply plugin: 'war'
+apply plugin: 'jetty'
 
 sourceCompatibility = '1.8'
 
@@ -14,6 +16,9 @@ sourceSets {
         }
 //        resources {
 //            srcDir 'src/resources'
+//        }
+//        webapp {
+//            srcDir 'src/webapp'
 //        }
     }
     test {
@@ -54,6 +59,9 @@ dependencies {
     // this define flat dir dependencies here
     // compile files('artifacts/' + 'service-v0_2.jar')
 
+    // compile group: 'commons-io', name: 'commons-io', version: '1.4'
+    compile group: 'log4j', name: 'log4j', version: '1.2.15', ext: 'jar'
+
 }
 
 // work around unnecessary timestamp in generated file which always causes dirty files in version control
@@ -78,4 +86,11 @@ task copyDepJars(type: Copy) {
   into 'libs'
 
 }
+
+
+// Jetty related config
+httpPort = 8080
+stopPort = 9451
+stopKey = 'foo'
+
 
