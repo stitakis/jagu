@@ -47,24 +47,35 @@ public class GitRepositoryManager implements RepositoryManager {
     }
 
     @Override
-    public void createLocalRepoByCloningRemoteRepo(URI remoteRepo) throws GitAPIException {
-        Git.cloneRepository()
+    public Git cloneRepository(URI remoteRepo) throws GitAPIException {
+        return Git.cloneRepository()
                 .setURI(remoteRepo.toString())
                 .setDirectory(dir)
                 .call();
+    }
+
+    @Override
+    public Git cloneRemoteRepository(URI remoteRepo) throws GitAPIException {
+
+//        System.out.println("Cloning from " + remoteRepo.toString() + " to " + dir);
+
+        return Git.cloneRepository()
+                .setURI(remoteRepo.toString())
+                .setDirectory(dir)
+                .call();
+//        System.out.println("Done clone!");
 
     }
 
     @Override
     public boolean updateAvailable() throws IOException, GitAPIException {
 
-        Git git = Git.open( dir );
+        Git git = Git.open(dir);
 
-//        System.out.println("Starting fetch");
         FetchResult result = git.fetch().setCheckFetchedObjects(true).call();
-//        System.out.println("Messages: " + result.getMessages());
 
         return result.getTrackingRefUpdates().size() > 0;
+
     }
 
     @Override
@@ -81,6 +92,16 @@ public class GitRepositoryManager implements RepositoryManager {
     @Override
     public void addUpdateAvailableListener(UpdateAvailableListener updateAvailableListener) {
         updateAvailableListeners.add(updateAvailableListener);
+    }
+
+    @Override
+    public boolean localRepositoryExists() {
+        try {
+            Git git = Git.open(dir);
+            return git!=null;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
 }

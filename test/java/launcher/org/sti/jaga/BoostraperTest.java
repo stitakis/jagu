@@ -26,7 +26,7 @@ public class BoostraperTest {
 //        setupRemoteRepo(remote);
 //
 //        Assert.assertTrue(local + " not created", removeAndCreateFolder(local));
-//        createLocalRepoByCloningRemoteRepo(remote, local);
+//        cloneRepository(remote, local);
 
     }
 
@@ -40,28 +40,28 @@ public class BoostraperTest {
             // This is fine: normal behaviour to get here
         }
 
-        Service service = createServiceInstance(getClassLoader("artifacts//service-v0_1.jar"));
+        Service service = Bootstraper.createServiceInstance(Bootstraper.getClassLoader("artifacts//service-v0_1.jar"));
         Assert.assertEquals("Version 0.1", service.getVersion());
 
-        service = createServiceInstance(getClassLoader("artifacts//service-v0_2.jar"));
+        service = Bootstraper.createServiceInstance(Bootstraper.getClassLoader("artifacts//service-v0_2.jar"));
         Assert.assertEquals("Version 0.2", service.getVersion());
 
     }
 
-    private Service createServiceInstance(ClassLoader cl) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        Class cls = cl.loadClass("org.sti.jaga.app.service.MainService");
-        Service service = (Service)cls.newInstance();
-        Assert.assertNotNull(service);
-        return service;
-    }
+//    private Service createServiceInstance(ClassLoader cl) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+//        Class cls = cl.loadClass("org.sti.jaga.app.service.MainService");
+//        Service service = (Service)cls.newInstance();
+//        Assert.assertNotNull(service);
+//        return service;
+//    }
 
-    private ClassLoader getClassLoader(String jarFilePath) throws MalformedURLException {
-        File file  = new File(jarFilePath);
-        Assert.assertTrue("verify path to the jar file!", file.exists());
-        URL url = file.toURI().toURL();
-        URL[] urls = new URL[]{url};
-        return new URLClassLoader(urls);
-    }
+//    private ClassLoader getClassLoader(String jarFilePath) throws MalformedURLException {
+//        File file  = new File(jarFilePath);
+//        Assert.assertTrue("verify path to the jar file!", file.exists());
+//        URL url = file.toURI().toURL();
+//        URL[] urls = new URL[]{url};
+//        return new URLClassLoader(urls);
+//    }
 
 
 }

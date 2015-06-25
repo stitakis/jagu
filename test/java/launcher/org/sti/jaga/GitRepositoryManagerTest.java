@@ -107,7 +107,7 @@ public class GitRepositoryManagerTest {
     }
 
     public void cloneRemoteRepository() throws GitAPIException {
-        repositoryManager.createLocalRepoByCloningRemoteRepo(new File(remote).toURI());
+        repositoryManager.cloneRepository(new File(remote).toURI());
         Assert.assertTrue(new File(local).exists());
     }
 
@@ -202,5 +202,30 @@ public class GitRepositoryManagerTest {
         }
 
     }
+
+    @Test
+    public void throwExceptionIfRepoDirDoesNotExists() {
+        GitRepositoryManager manager = new GitRepositoryManager(new File("out/this-dir-does-not-exists"), 50000);
+        try {
+            manager.updateAvailable();
+            Assert.fail();
+        } catch (IOException e) {
+
+        } catch (GitAPIException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void localRepositoryExistsReturnFalseWhenLocalRepositoryDoesNotExists() throws Exception {
+        GitRepositoryManager manager = new GitRepositoryManager(new File("out/this-dir-does-not-exists"), 50000);
+        Assert.assertFalse(manager.localRepositoryExists());
+    }
+
+    @Test
+    public void localRepositoryExistsReturnTrueWhenLocalRepositoryExists() throws Exception {
+        Assert.assertTrue(repositoryManager.localRepositoryExists());
+    }
+
 
 }
