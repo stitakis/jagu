@@ -3,9 +3,10 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'war'
 apply plugin: 'jetty'
+apply plugin: "de.gliderpilot.jnlp"
+apply plugin: "org.ajoberstar.grgit"
 
 sourceCompatibility = '1.8'
-
 
 sourceSets {
     main {
@@ -32,11 +33,28 @@ sourceSets {
 
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:+'
+        classpath "org.ajoberstar:gradle-git:1.2.0"
+    }
+}
+
+
 repositories {
   mavenCentral()
   maven {
-    url "https://repo.eclipse.org/content/groups/releases/"
+      url "https://repo.eclipse.org/content/groups/releases/"
   }
+//  maven {
+//      url "https://plugins.gradle.org/"
+//  }
+//  maven {
+//  }
 }
 
 dependencies {
@@ -62,20 +80,8 @@ dependencies {
     // compile group: 'commons-io', name: 'commons-io', version: '1.4'
     compile group: 'log4j', name: 'log4j', version: '1.2.15', ext: 'jar'
 
+//    classpath "de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:0.2.1"
 }
-
-// work around unnecessary timestamp in generated file which always causes dirty files in version control
-// https://issues.gradle.org/browse/GRADLE-2293
-//task adjustEclipseSettingsFile << {
-//   ant.replaceregexp(match:'^#.*', replace:'', flags:'g', byline:true) {
-//      fileset(dir: project.projectDir, includes: '.settings/org.eclipse.jdt.core.prefs')
-//   }
-//}
-//task sortEclipseSettingsFile << {
-//   new File(project.projectDir, '.settings/org.eclipse.jdt.core.prefs').with { it.text = it.readLines().findAll { it }.sort().join('\n') }
-//}
-// eclipseJdt.finalizedBy adjustEclipseSettingsFile
-// eclipseJdt.finalizedBy sortEclipseSettingsFile
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.4'
@@ -87,10 +93,40 @@ task copyDepJars(type: Copy) {
 
 }
 
-
 // Jetty related config
 httpPort = 8080
 stopPort = 9451
 stopKey = 'foo'
 
+
+// Jnlp
+
+jnlp {
+    useVersions = true
+    mainClassName = 'org.sti.jaga.Launcher'
+    withXml {
+        information {
+            title project.name
+            vendor project.group ?: project.name
+        }
+        security {
+            'all-permissions'()
+        }
+    }
+    signJarAddedManifestEntries = [
+            'Codebase': 'http://jaga.sti.org',
+            'Permissions': 'all-permissions',
+            'Application-Name': "${project.name}"
+    ]
+    signJarParams = [alias: 'myalias', storepass: 'mystorepass']
+    desc = {
+        'application-desc'('main-class': "${project.jnlp.mainClassName}") {
+            argument('-verbose')
+        }
+    }
+}
+
+task genkey << {
+    ant.genkey(alias: 'myalias', storepass: 'mystorepass', dname: 'CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US')
+}
 

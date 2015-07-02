@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.eclipse.jgit:org.eclipse.jgit.archive:3.7.1.201504261725-r">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jgit/org.eclipse.jgit.archive/3.7.1.201504261725-r/8aab2d5d8deeaa8345d6df456de215b3d973c4b2/org.eclipse.jgit.archive-3.7.1.201504261725-r.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jgit/org.eclipse.jgit.archive/3.7.1.201504261725-r/fe76a8d27a1ce6752d55c8592e697be81f98cc40/org.eclipse.jgit.archive-3.7.1.201504261725-r-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
