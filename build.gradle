@@ -5,7 +5,7 @@ apply plugin: 'war'
 apply plugin: 'jetty'
 apply plugin: 'application'
 
-sourceCompatibility = '1.8'
+// sourceCompatibility = '1.8'
 
 
 sourceSets {
@@ -96,21 +96,51 @@ stopPort = 9451
 stopKey = 'foo'
 
 
-task itest() {
 
-    // Create repo
-    // Commit service1 and classpath.txt
-    // Start launcher JavaFX app
-    execute();
-    // Commit service2 and new classpath.txt
-    // Trigger update in launcher JavaFX app with robot framework
-    // Verify new service was loaded
-
-    System.out.println('Starting integration test')
-
+task createRemoteBareGitRepo(type:JavaExec) {
+    main = 'org.sti.jaga.itest.CreateBareRemoteGitRepoUtil'
+    classpath = files(sourceSets.main.runtimeClasspath,sourceSets.test.runtimeClasspath)
 }
 
-task execute(type:JavaExec) {
+task initializeRemoteGitRepoUtil(type:JavaExec) {
+    main = 'org.sti.jaga.itest.InitializeRemoteGitRepoUtil'
+    classpath = files(sourceSets.main.runtimeClasspath,sourceSets.test.runtimeClasspath)
+}
+
+task executeLauncher(type:JavaExec) {
     main = 'org.sti.jaga.Launcher'
     classpath = sourceSets.main.runtimeClasspath
 }
+
+
+task itest << {
+
+    System.out.println('Starting integration test')
+
+    // Create repo
+    System.out.println('Starting CreateBareRemoteGitRepoUtil')
+    tasks.createRemoteBareGitRepo.execute()
+
+    // Commit service1 and classpath.txt
+    System.out.println('Starting InitializeRemoteGitRepo')
+    tasks.initializeRemoteGitRepoUtil.execute()
+
+    // Start launcher JavaFX app
+    System.out.println('Starting Launcher')
+    tasks.executeLauncher.execute()
+
+    // Wait
+    Thread.sleep(30000);
+
+    // Commit service2 and new classpath.txt
+
+
+    // Trigger update in launcher JavaFX app with robot framework
+    // Verify new service was loaded
+
+
+}
+
+mainClassName = "org.sti.jaga.Launcher"
+
+

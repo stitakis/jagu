@@ -24,7 +24,7 @@ public class GitRepositoryManager implements RepositoryManager {
 
     private final Timer timer = new Timer();
     private File dir;
-    private final List<UpdateAvailableListener> updateAvailableListeners = new ArrayList<>();
+    private final List<UpdateAvailableListener> updateAvailableListeners = new ArrayList<UpdateAvailableListener>();
 
     public GitRepositoryManager(File dir, long timerPeriod) {
         this.dir = dir;

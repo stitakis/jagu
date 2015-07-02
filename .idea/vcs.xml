@@ -3,7 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/out/" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/out/local-repo_20150615172344" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/out/local-repo_20150615172619" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/out/local-repo_20150615172712" vcs="Git" />

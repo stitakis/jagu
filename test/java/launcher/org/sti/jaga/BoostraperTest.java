@@ -23,7 +23,7 @@ public class BoostraperTest {
     @Before
     public void setup() throws IOException, GitAPIException {
 //        Assert.assertTrue(remote + " not created", removeAndCreateFolder(remote));
-//        setupRemoteRepo(remote);
+//        addFilesToRemoteRepo(remote);
 //
 //        Assert.assertTrue(local + " not created", removeAndCreateFolder(local));
 //        cloneRepository(remote, local);

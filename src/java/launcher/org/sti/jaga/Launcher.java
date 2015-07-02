@@ -55,7 +55,8 @@ public class Launcher extends Application {
     private void initializeRepository() {
 
         try {
-            remoteRepo = new URL("http://localhost:6001/git/myrepo.git").toURI();
+//            remoteRepo = new URL("http://localhost:6001/git/myrepo.git").toURI();
+            remoteRepo = new File("out/remote-bare-repo").toURI();
 
             if (!repoDir.exists()) {
                 repoDir.mkdir();
@@ -83,8 +84,8 @@ public class Launcher extends Application {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
         };
 
     }

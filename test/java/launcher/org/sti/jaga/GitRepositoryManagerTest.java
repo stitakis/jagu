@@ -31,8 +31,10 @@ public class GitRepositoryManagerTest {
     public void setup() throws IOException, GitAPIException {
 
         if (remoteRepo==null) {
-            boolean created = createRemoteRepo();
-            Assert.assertTrue(remote + " not created", created);
+            remoteRepo = GitRepoTestHelper.createRemoteRepo(remote);
+            Assert.assertNotNull(remote + " not created", remoteRepo);
+            setupRemoteRepo(remoteRepo);
+            remoteRepo.closeRepository();
         }
 
         if (repositoryManager==null) {
@@ -42,27 +44,21 @@ public class GitRepositoryManagerTest {
 
     }
 
-    private boolean createRemoteRepo() throws IOException, GitAPIException {
-        boolean created = removeAndCreateFolder(remote);
-        Assert.assertTrue(remote + " not created", created);
-        remoteRepo = new GitRepoTestHelper(remote);
-        remoteRepo.setupRemoteRepo();
-        remoteRepo.closeRepository();
-        return created;
-    }
-
     @Test
     public void updateLocalRepoIfRemoteIsAhead() throws IOException, GitAPIException {
         Assert.assertFalse(repositoryManager.updateAvailable());
 
         // Remove the repo from disc and setup a new again
-        createRemoteRepo();
+        GitRepoTestHelper remoteRepo = GitRepoTestHelper.createRemoteRepo(remote);
+        setupRemoteRepo(remoteRepo);
+        remoteRepo.closeRepository();
+
 
         // count jars files before updating the local repo
         String[] list = getFiles(local, ".jar");
 
         // add a file to the remote repo
-        remoteRepo.copyAddAndCommit(new File("lib//commons-logging-1.1.1.jar"));
+        GitRepositoryManagerTest.remoteRepo.copyAddAndCommit(new File("lib//commons-logging-1.1.1.jar"));
 
         // verify that a new update is available
         Assert.assertTrue(repositoryManager.updateAvailable());
@@ -78,7 +74,7 @@ public class GitRepositoryManagerTest {
     public void getNotifiedWhenUpdateIsAvailable() throws IOException, GitAPIException, InterruptedException {
         Assert.assertFalse(repositoryManager.updateAvailable());
 
-        CountDownLatch latch = new CountDownLatch(1);
+        final CountDownLatch latch = new CountDownLatch(1);
 
         repositoryManager.addUpdateAvailableListener(new UpdateAvailableListener() {
             @Override
@@ -123,86 +119,6 @@ public class GitRepositoryManagerTest {
 
     }
 
-
-    private boolean removeAndCreateFolder(String folder) throws IOException {
-        FileUtils.deleteDirectory(new File(folder));
-        return new File(folder).mkdir();
-    }
-
-    public class GitRepoTestHelper {
-
-        private String repoDir;
-        private Git git;
-        private Repository repository;
-
-        public GitRepoTestHelper(String repoDir) {
-            this.repoDir = repoDir;
-        }
-
-        private void createRepo() throws IOException, GitAPIException {
-
-            File dir = new File(repoDir);
-            repository = createNewRepository(dir);
-            git = new Git(repository);
-
-            // run the init-call
-            git.init()
-                    .setBare(false)
-                    .setDirectory(dir)
-                    .call();
-
-        }
-
-        public Repository createNewRepository(File localPath) throws IOException {
-
-            // create the directory
-            Repository repository = FileRepositoryBuilder.create(new File(localPath, ".git"));
-            repository.create();
-
-            return repository;
-        }
-
-
-        public void setupRemoteRepo() throws IOException, GitAPIException {
-
-            createRepo();
-
-            File from = new File("lib//commons-codec-1.4.jar");
-            File to = new File(repoDir + "//" + "commons-codec-1.4.jar");
-            Files.copy(from.toPath(), to.toPath());
-
-            addAndCommit(".", "Added file: " + to.getName());
-
-        }
-
-        public void addAndCommit(String filePattern, String comment) throws GitAPIException {
-            // run the add
-            git.add()
-                    .addFilepattern(filePattern)
-                    .call();
-
-            // and then Commit the changes
-            git.commit()
-                    .setMessage(comment)
-                    .call();
-
-        }
-
-        public void closeRepository() {
-            repository.close();
-        }
-
-        public void copyAddAndCommit(File file) throws IOException, GitAPIException {
-
-            File to = new File(repoDir + "//" + file.getName());
-            Files.copy(file.toPath(), to.toPath());
-
-            addAndCommit(".", "Added file: " + toString());
-
-        }
-
-    }
-
     @Test
     public void throwExceptionIfRepoDirDoesNotExists() {
         GitRepositoryManager manager = new GitRepositoryManager(new File("out/this-dir-does-not-exists"), 50000);
@@ -227,5 +143,14 @@ public class GitRepositoryManagerTest {
         Assert.assertTrue(repositoryManager.localRepositoryExists());
     }
 
+    public void setupRemoteRepo(GitRepoTestHelper gitRepoTestHelper) throws IOException, GitAPIException {
+
+        File from = new File("lib//commons-codec-1.4.jar");
+        File to = new File(gitRepoTestHelper.getRepoDir() + "//" + "commons-codec-1.4.jar");
+        Files.copy(from.toPath(), to.toPath());
+
+        gitRepoTestHelper.addAndCommit(".", "Added file: " + to.getName());
+
+    }
 
 }
