@@ -14,11 +14,13 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.sti.jaga.application.Service;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by stitakis on 22.06.15.
@@ -45,7 +47,7 @@ public class Launcher extends Application {
 
         initializeRepository();
 
-        loadService();
+        loadService(repoDir);
 
         // TODO: add logging lib
         System.out.println("Done start!");
@@ -62,7 +64,7 @@ public class Launcher extends Application {
                 repoDir.mkdir();
             }
 
-            repositoryManager = new GitRepositoryManager(repoDir, 30000);
+            repositoryManager = new GitRepositoryManager(repoDir, 1000);
 
             if (!repositoryManager.localRepositoryExists()) {
 
@@ -70,10 +72,11 @@ public class Launcher extends Application {
 
             } else if (repositoryManager.updateAvailable()) {
 
-                repositoryManager.update();
+                repositoryManager.update(true);
 
             }
 
+            // TODO listener is not getting notified. Fix!!
             repositoryManager.addUpdateAvailableListener(createUpdateAvailableListener());
 
             System.out.println("Done initializeRepository");
@@ -91,6 +94,7 @@ public class Launcher extends Application {
     }
 
     private UpdateAvailableListener createUpdateAvailableListener() {
+
         return new UpdateAvailableListener() {
             @Override
             public void updateAvailable() {
@@ -99,15 +103,19 @@ public class Launcher extends Application {
         };
     }
 
-    private void loadService() throws MalformedURLException, InstantiationException, IllegalAccessException, ClassNotFoundException, InterruptedException {
-        Service service = Bootstraper.createServiceInstance(Bootstraper.getClassLoader("artifacts//service-v0_1.jar"));
+    private void loadService(File repoDir) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, InterruptedException {
+
+        List jars = loadJarFilenamesFromClasspathFile(new File(repoDir + "/" + "classpath.txt"));
+
+        // Create Properties file
+        Service service = Bootstraper.createServiceInstance(jars, repoDir);
         version.setValue("Version:" + service.getVersion());
     }
 
     private void display(final Stage primaryStage) {
         final VBox container = new VBox();
         container.getChildren().addAll(versionLabel, updateButton);
-        final Scene scene = new Scene(container, 800, 600);
+        final Scene scene = new Scene(container, 400, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -117,6 +125,15 @@ public class Launcher extends Application {
         version.setValue("Version: Unknown!");
         updateButton.disableProperty().bind(updateAvailableProperty);
         updateButton.visibleProperty().bind(updateAvailableProperty);
+    }
+
+    public static List<String> loadJarFilenamesFromClasspathFile(File classpathFile) throws IOException {
+
+        Properties properties = new Properties();
+        properties.load(new FileReader(classpathFile));
+        String jars = properties.getProperty("classpath");
+
+        return Arrays.asList(jars.split(","));
     }
 
 }

@@ -1,10 +1,6 @@
 package org.sti.jaga;
 
-import org.apache.commons.io.FileUtils;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.junit.*;
 
 import java.io.File;
@@ -64,7 +60,7 @@ public class GitRepositoryManagerTest {
         Assert.assertTrue(repositoryManager.updateAvailable());
 
         // update the local repo
-        Assert.assertTrue(repositoryManager.update());
+        Assert.assertTrue(repositoryManager.update(true));
 
         Assert.assertTrue(getFiles(local, ".jar").length == list.length + 1);
     }

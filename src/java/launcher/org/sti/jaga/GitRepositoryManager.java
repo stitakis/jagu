@@ -79,9 +79,13 @@ public class GitRepositoryManager implements RepositoryManager {
     }
 
     @Override
-    public boolean update() throws IOException, GitAPIException {
+    public boolean update(boolean resetFirst) throws IOException, GitAPIException {
 
-        Git git = Git.open( dir );
+        Git git = Git.open(dir);
+
+        if (resetFirst) {
+            git.reset().call();
+        }
 
         PullResult call = git.pull().call();
 

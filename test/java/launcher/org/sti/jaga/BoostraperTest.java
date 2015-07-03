@@ -8,9 +8,8 @@ import org.sti.jaga.application.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoostraperTest {
 
@@ -48,20 +47,15 @@ public class BoostraperTest {
 
     }
 
-//    private Service createServiceInstance(ClassLoader cl) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-//        Class cls = cl.loadClass("org.sti.jaga.app.service.MainService");
-//        Service service = (Service)cls.newInstance();
-//        Assert.assertNotNull(service);
-//        return service;
-//    }
+    @Test
+    public void testLoadServiceFromDir() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 
-//    private ClassLoader getClassLoader(String jarFilePath) throws MalformedURLException {
-//        File file  = new File(jarFilePath);
-//        Assert.assertTrue("verify path to the jar file!", file.exists());
-//        URL url = file.toURI().toURL();
-//        URL[] urls = new URL[]{url};
-//        return new URLClassLoader(urls);
-//    }
+        File dir = new File("artifacts");
+        List<String> jars = new ArrayList<String>();
+        jars.add("service-v0_1.jar");
+        Service service = Bootstraper.createServiceInstance(jars, dir);
+        Assert.assertEquals("Version 0.1", service.getVersion());
 
+    }
 
 }

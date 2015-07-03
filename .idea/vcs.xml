@@ -3,44 +3,5 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150615172344" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150615172619" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150615172712" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150615172955" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150616084636" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150616174901" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150622172526" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150625063541" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150625063559" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150625063858" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150625063912" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150625064743" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150625065045" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150625065232" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150625213357" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150702062919" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150702063522" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150702063555" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/local-repo_20150702090027" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150615172344" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150615172619" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150615172712" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150615172955" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150616084636" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150616174901" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150622172526" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150625063541" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150625063559" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150625063858" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150625063912" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150625064743" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150625065045" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150625065232" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150625213357" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150702062919" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150702063522" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150702063555" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/out/remote-jars-repo_20150702090027" vcs="Git" />
   </component>
 </project>
