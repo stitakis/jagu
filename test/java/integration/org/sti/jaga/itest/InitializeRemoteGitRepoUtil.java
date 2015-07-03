@@ -9,8 +9,10 @@ import org.sti.jaga.GitRepositoryManager;
 import org.sti.jaga.TestUtil;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Properties;
 
 /**
  * Created by stitakis on 02.07.15.
@@ -20,7 +22,7 @@ public class InitializeRemoteGitRepoUtil {
     public static void main(String[] args) {
 
         try {
-            // TODO Clone remote bare repo
+            // Clone remote bare repo
             final String repoDir = "out/remote-repo";
             TestUtil.removeAndCreateFolder(repoDir);
 
@@ -32,7 +34,7 @@ public class InitializeRemoteGitRepoUtil {
             // Add files to remote repo
             addFilesToRemoteRepo(git, repoDir);
 
-            // TODO Push files to bare remote repo
+            // Push files to bare remote repo
             Iterable<PushResult> call = git.push()
                     .setRemote(remoteBareRepoFile.getAbsolutePath())
                     .setPushAll()
@@ -51,11 +53,24 @@ public class InitializeRemoteGitRepoUtil {
 
     public static void addFilesToRemoteRepo(Git git, String repoDir) throws IOException, GitAPIException {
 
-        File from = new File("artifacts//service-v0_1.jar");
-        File to = new File(repoDir + "//" + from.getName());
+        File from = new File("artifacts/service-v0_1.jar");
+        File to = new File(repoDir + "/" + from.getName());
         Files.copy(from.toPath(), to.toPath());
-
         GitRepoTestHelper.addAndCommit(git, ".", "Added file: " + to.getName());
+
+        // TODO create file with list of jars
+        File classpath = new File(repoDir + "/" + "classpath.txt");
+        FileWriter fileWriter = new FileWriter(classpath);
+//        fileWriter.write("classpath=" + to.getName());
+//        fileWriter.flush();
+//        fileWriter.close();
+
+        Properties props = new Properties();
+        props.put("classpath", to.getName());
+
+        props.store(fileWriter, "classpath for service-v0_1");
+
+        GitRepoTestHelper.addAndCommit(git, ".", "Added file: " + classpath.getName());
 
     }
 
