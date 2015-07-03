@@ -58,12 +58,8 @@ public class InitializeRemoteGitRepoUtil {
         Files.copy(from.toPath(), to.toPath());
         GitRepoTestHelper.addAndCommit(git, ".", "Added file: " + to.getName());
 
-        // TODO create file with list of jars
         File classpath = new File(repoDir + "/" + "classpath.txt");
         FileWriter fileWriter = new FileWriter(classpath);
-//        fileWriter.write("classpath=" + to.getName());
-//        fileWriter.flush();
-//        fileWriter.close();
 
         Properties props = new Properties();
         props.put("classpath", to.getName());
