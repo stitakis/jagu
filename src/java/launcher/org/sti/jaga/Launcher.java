@@ -5,13 +5,16 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.sti.jaga.application.Service;
+import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.io.FileReader;
@@ -76,7 +79,6 @@ public class Launcher extends Application {
 
             }
 
-            // TODO listener is not getting notified. Fix!!
             repositoryManager.addUpdateAvailableListener(createUpdateAvailableListener());
 
             System.out.println("Done initializeRepository");
@@ -98,6 +100,7 @@ public class Launcher extends Application {
         return new UpdateAvailableListener() {
             @Override
             public void updateAvailable() {
+                System.out.println("UPDATE AVAILABLE!");  // TODO remove this
                 updateAvailableProperty.setValue(true);
             }
         };
@@ -123,8 +126,36 @@ public class Launcher extends Application {
     public void initialize() {
         versionLabel.textProperty().bind(version);
         version.setValue("Version: Unknown!");
-        updateButton.disableProperty().bind(updateAvailableProperty);
+        updateButton.setDisable(false);
+//        updateButton.setVisible(true);
         updateButton.visibleProperty().bind(updateAvailableProperty);
+//        updateAvailableProperty.setValue(true);
+        updateButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    repositoryManager.update(true);
+
+                    try {
+                        Launcher.this.loadService(repoDir);
+
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (GitAPIException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public static List<String> loadJarFilenamesFromClasspathFile(File classpathFile) throws IOException {
