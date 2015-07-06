@@ -3,6 +3,11 @@
 build/
 out/
 
+.gradle/*
+.idea/*
+build/*
+out/*
+
 
 *.jar
 *.class
