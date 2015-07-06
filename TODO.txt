@@ -6,25 +6,22 @@ DONE:
  - see: http://stackoverflow.com/questions/26734933/how-to-set-up-git-over-http
 3. Create a Java FX App
   - As user I would like to update my app if an update is available
-
-TODO:
-3. Create a Java FX App
+4. Create a Java FX App
   - As user I would like to update my app if an update is available
     - Gradle:
        - Create a gradle task to initialize the remote repo
        - Remote repo will be reset to initial status (commit)
        - Remote repo will be updated to another status
 
-
-4. Create a war with a webstart app with gradle that includes
-    - a git repo with the app jars
+TODO:
+5. Create a war with a webstart app with gradle that includes
     - jnlp file that start the launcher/bootstraper
       - copy from: /home/stitakis/.gradle/wrapper/dists/gradle-2.4-all/3i2gobhdl0fm2tosnn15g540i0/gradle-2.4/samples
-5. Deploy to jetty and start it with gradle
-6. Start the app with robot framework
-7. Create a new war file and deploy it to jetty
-8. The started app should notify that an update is ready and robot should accept to download it
-9. Start the app with robot framework and verify that it is the new version.
+6. Deploy to jetty and start it with gradle
+7. Start the app with robot framework
+8. Create a new war file and deploy it to jetty
+9. The started app should notify that an update is ready and robot should accept to download it
+10. Start the app with robot framework and verify that it is the new version.
 
 
 NOTES:
