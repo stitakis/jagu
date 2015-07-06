@@ -9,22 +9,24 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by stitakis on 28.05.15.
  */
 public class Bootstraper {
 
-    public static void main(String[] args) {
+    public static Service createServiceInstance(List<String> jars, File dir) throws ClassNotFoundException, InstantiationException, IllegalAccessException, MalformedURLException {
 
+        String[] jarFilenames = new String[jars.size()];
+        int i = 0;
+        for (String jar : jars) {
+            jarFilenames[i++] = dir.getAbsolutePath() + File.separator + jar;
+        }
 
-        // Query git repo and update if new version
-
-        // Start main plugin with classloader
-
-
-
-
+        return Bootstraper.createServiceInstance(Bootstraper.getClassLoader(jarFilenames));
     }
 
     public static Service createServiceInstance(ClassLoader cl) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -35,10 +37,18 @@ public class Bootstraper {
     }
 
     public static ClassLoader getClassLoader(String jarFilePath) throws MalformedURLException {
-        File file  = new File(jarFilePath);
-//        Assert.assertTrue("verify path to the jar file!", file.exists());
-        URL url = file.toURI().toURL();
-        URL[] urls = new URL[]{url};
+        return getClassLoader(new String[]{jarFilePath});
+    }
+
+    public static ClassLoader getClassLoader(String[] jarFilenames) throws MalformedURLException {
+        // TODO test this
+        URL[] urls = new URL[jarFilenames.length];
+        int i = 0;
+        for (String fileName : jarFilenames) {
+            File file = new File(fileName);
+            urls[i++] = file.toURI().toURL();
+        }
+
         return new URLClassLoader(urls);
     }
 

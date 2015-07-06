@@ -5,20 +5,25 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.sti.jaga.application.Service;
+import sun.rmi.runtime.Log;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by stitakis on 22.06.15.
@@ -45,7 +50,7 @@ public class Launcher extends Application {
 
         initializeRepository();
 
-        loadService();
+        loadService(repoDir);
 
         // TODO: add logging lib
         System.out.println("Done start!");
@@ -55,13 +60,14 @@ public class Launcher extends Application {
     private void initializeRepository() {
 
         try {
-            remoteRepo = new URL("http://localhost:6001/git/myrepo.git").toURI();
+//            remoteRepo = new URL("http://localhost:6001/git/myrepo.git").toURI();
+            remoteRepo = new File("out/remote-bare-repo").toURI();
 
             if (!repoDir.exists()) {
                 repoDir.mkdir();
             }
 
-            repositoryManager = new GitRepositoryManager(repoDir, 30000);
+            repositoryManager = new GitRepositoryManager(repoDir, 1000);
 
             if (!repositoryManager.localRepositoryExists()) {
 
@@ -69,7 +75,7 @@ public class Launcher extends Application {
 
             } else if (repositoryManager.updateAvailable()) {
 
-                repositoryManager.update();
+                repositoryManager.update(true);
 
             }
 
@@ -83,30 +89,36 @@ public class Launcher extends Application {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
         };
 
     }
 
     private UpdateAvailableListener createUpdateAvailableListener() {
+
         return new UpdateAvailableListener() {
             @Override
             public void updateAvailable() {
+                System.out.println("UPDATE AVAILABLE!");  // TODO remove this
                 updateAvailableProperty.setValue(true);
             }
         };
     }
 
-    private void loadService() throws MalformedURLException, InstantiationException, IllegalAccessException, ClassNotFoundException, InterruptedException {
-        Service service = Bootstraper.createServiceInstance(Bootstraper.getClassLoader("artifacts//service-v0_1.jar"));
+    private void loadService(File repoDir) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, InterruptedException {
+
+        List jars = loadJarFilenamesFromClasspathFile(new File(repoDir + "/" + "classpath.txt"));
+
+        // Create Properties file
+        Service service = Bootstraper.createServiceInstance(jars, repoDir);
         version.setValue("Version:" + service.getVersion());
     }
 
     private void display(final Stage primaryStage) {
         final VBox container = new VBox();
         container.getChildren().addAll(versionLabel, updateButton);
-        final Scene scene = new Scene(container, 800, 600);
+        final Scene scene = new Scene(container, 400, 200);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -114,8 +126,45 @@ public class Launcher extends Application {
     public void initialize() {
         versionLabel.textProperty().bind(version);
         version.setValue("Version: Unknown!");
-        updateButton.disableProperty().bind(updateAvailableProperty);
+        updateButton.setDisable(false);
+//        updateButton.setVisible(true);
         updateButton.visibleProperty().bind(updateAvailableProperty);
+//        updateAvailableProperty.setValue(true);
+        updateButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    repositoryManager.update(true);
+
+                    try {
+                        Launcher.this.loadService(repoDir);
+
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (GitAPIException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public static List<String> loadJarFilenamesFromClasspathFile(File classpathFile) throws IOException {
+
+        Properties properties = new Properties();
+        properties.load(new FileReader(classpathFile));
+        String jars = properties.getProperty("classpath");
+
+        return Arrays.asList(jars.split(","));
     }
 
 }

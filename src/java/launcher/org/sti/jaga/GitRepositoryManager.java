@@ -24,26 +24,34 @@ public class GitRepositoryManager implements RepositoryManager {
 
     private final Timer timer = new Timer();
     private File dir;
-    private final List<UpdateAvailableListener> updateAvailableListeners = new ArrayList<>();
+    private final List<UpdateAvailableListener> updateAvailableListeners = new ArrayList<UpdateAvailableListener>();
 
-    public GitRepositoryManager(File dir, long timerPeriod) {
+    public GitRepositoryManager(final File dir, final long timerPeriod) {
         this.dir = dir;
-        timer.schedule(new TimerTask() {
+        timer.scheduleAtFixedRate(new TimerTask() {
+            private int c = 0;
+
             @Override
             public void run() {
-                for (UpdateAvailableListener updateAvailableListener : updateAvailableListeners) {
-                    try {
-                        if (updateAvailable()) {
-                            updateAvailableListener.updateAvailable();
-                        }
-                    } catch (IOException e) {
-                        logger.warn("Timer error", e);
-                    } catch (GitAPIException e) {
-                        logger.warn("Timer error" , e);
+                try {
+//                    if (!(c++>20) && !updateAvailable()) {
+                    if (!updateAvailable()) {
+                        return;
                     }
+
+
+                } catch (IOException e) {
+                    logger.warn("Timer error", e);
+                } catch (GitAPIException e) {
+                    logger.warn("GIT error" , e);
+                }
+
+                // update listeners
+                for (UpdateAvailableListener updateAvailableListener : updateAvailableListeners) {
+                    updateAvailableListener.updateAvailable();
                 }
             }
-        }, timerPeriod);
+        }, 1000, timerPeriod);
     }
 
     @Override
@@ -79,9 +87,13 @@ public class GitRepositoryManager implements RepositoryManager {
     }
 
     @Override
-    public boolean update() throws IOException, GitAPIException {
+    public boolean update(boolean resetFirst) throws IOException, GitAPIException {
 
-        Git git = Git.open( dir );
+        Git git = Git.open(dir);
+
+        if (resetFirst) {
+            git.reset().call();
+        }
 
         PullResult call = git.pull().call();
 

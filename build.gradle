@@ -3,8 +3,9 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'war'
 apply plugin: 'jetty'
+apply plugin: 'application'
 
-sourceCompatibility = '1.8'
+// sourceCompatibility = '1.8'
 
 
 sourceSets {
@@ -24,6 +25,7 @@ sourceSets {
     test {
         java {
             srcDir 'test/java/launcher'
+            srcDir 'test/java/integration'
         }
         resources {
             srcDir 'test/resources'
@@ -92,5 +94,78 @@ task copyDepJars(type: Copy) {
 httpPort = 8080
 stopPort = 9451
 stopKey = 'foo'
+
+
+
+task createRemoteBareGitRepo(type:JavaExec) {
+    main = 'org.sti.jaga.itest.CreateBareRemoteGitRepoUtil'
+    classpath = files(sourceSets.main.runtimeClasspath,sourceSets.test.runtimeClasspath)
+}
+
+task initializeRemoteGitRepoUtil(type:JavaExec) {
+    main = 'org.sti.jaga.itest.InitializeRemoteGitRepoUtil'
+    classpath = files(sourceSets.main.runtimeClasspath,sourceSets.test.runtimeClasspath)
+}
+
+task executeLauncher(type:JavaExec) {
+    main = 'org.sti.jaga.Launcher'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task updateRemoteGitRepoUtil(type:JavaExec) {
+    main = 'org.sti.jaga.itest.UpdateRemoteGitRepoUtil'
+    classpath = files(sourceSets.main.runtimeClasspath,sourceSets.test.runtimeClasspath)
+}
+
+task deleteOutFolderContent(type: Delete) {
+    delete 'out/local-repo', 'out/remote-bare-repo', 'out/remote-repo', 'out/remote-repo2'
+}
+
+
+
+task itest << {
+
+    System.out.println('Starting integration test')
+
+    System.out.println('Deleting content of out folder')
+    tasks.deleteOutFolderContent.execute();
+//
+    // Create repo
+    System.out.println('Starting CreateBareRemoteGitRepoUtil')
+    tasks.createRemoteBareGitRepo.execute()
+
+    // Commit service1 and classpath.txt
+    System.out.println('Starting InitializeRemoteGitRepo')
+    tasks.initializeRemoteGitRepoUtil.execute()
+
+    new Thread(new Runnable() {
+        @Override
+        void run() {
+            // Start launcher JavaFX app
+            System.out.println('Starting Launcher')
+            tasks.executeLauncher.execute()
+        }
+    }).start()
+
+    // Wait
+    Thread.sleep(2000);
+
+    // Commit service2 and new classpath.txt
+    System.out.println('Starting UpdateRemoteGitRepoUtil')
+    tasks.updateRemoteGitRepoUtil.execute()
+
+    // Trigger update in launcher JavaFX app with robot framework
+    // Verify new service was loaded
+
+    // Wait
+    Thread.sleep(20000);
+
+    System.out.println('Done itest!')
+
+//    System.exit(0)
+
+}
+
+mainClassName = "org.sti.jaga.Launcher"
 
 
