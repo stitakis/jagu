@@ -1,0 +1,12 @@
+.gradle/
+.idea/
+build/
+out/
+
+
+*.jar
+*.class
+
+hs_err_pid*
+
+
