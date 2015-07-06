@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.sti.jaga.application.Service;
-import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.io.FileReader;
