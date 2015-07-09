@@ -3,10 +3,10 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'war'
 apply plugin: 'jetty'
+apply plugin: "de.gliderpilot.jnlp"
 apply plugin: 'application'
 
 // sourceCompatibility = '1.8'
-
 
 sourceSets {
     main {
@@ -15,12 +15,6 @@ sourceSets {
             srcDir 'src/java/service'
 
         }
-//        resources {
-//            srcDir 'src/resources'
-//        }
-//        webapp {
-//            srcDir 'src/webapp'
-//        }
     }
     test {
         java {
@@ -34,10 +28,21 @@ sourceSets {
 
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:+'
+    }
+}
+
+
 repositories {
   mavenCentral()
   maven {
-    url "https://repo.eclipse.org/content/groups/releases/"
+      url "https://repo.eclipse.org/content/groups/releases/"
   }
 }
 
@@ -58,26 +63,9 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.12'
     testCompile 'junit:junit:4.12'
 
-    // this define flat dir dependencies here
-    // compile files('artifacts/' + 'service-v0_2.jar')
-
-    // compile group: 'commons-io', name: 'commons-io', version: '1.4'
     compile group: 'log4j', name: 'log4j', version: '1.2.15', ext: 'jar'
 
 }
-
-// work around unnecessary timestamp in generated file which always causes dirty files in version control
-// https://issues.gradle.org/browse/GRADLE-2293
-//task adjustEclipseSettingsFile << {
-//   ant.replaceregexp(match:'^#.*', replace:'', flags:'g', byline:true) {
-//      fileset(dir: project.projectDir, includes: '.settings/org.eclipse.jdt.core.prefs')
-//   }
-//}
-//task sortEclipseSettingsFile << {
-//   new File(project.projectDir, '.settings/org.eclipse.jdt.core.prefs').with { it.text = it.readLines().findAll { it }.sort().join('\n') }
-//}
-// eclipseJdt.finalizedBy adjustEclipseSettingsFile
-// eclipseJdt.finalizedBy sortEclipseSettingsFile
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.4'
@@ -129,7 +117,7 @@ task itest << {
 
     System.out.println('Deleting content of out folder')
     tasks.deleteOutFolderContent.execute();
-//
+
     // Create repo
     System.out.println('Starting CreateBareRemoteGitRepoUtil')
     tasks.createRemoteBareGitRepo.execute()
@@ -154,18 +142,54 @@ task itest << {
     System.out.println('Starting UpdateRemoteGitRepoUtil')
     tasks.updateRemoteGitRepoUtil.execute()
 
-    // Trigger update in launcher JavaFX app with robot framework
-    // Verify new service was loaded
-
     // Wait
     Thread.sleep(20000);
 
     System.out.println('Done itest!')
-
-//    System.exit(0)
 
 }
 
 mainClassName = "org.sti.jaga.Launcher"
 
 
+jnlp {
+    useVersions = true
+    mainClassName = 'org.sti.jaga.Launcher'
+    withXml {
+        information {
+            title project.name
+            vendor project.group ?: project.name
+        }
+        security {
+            'all-permissions'()
+        }
+    }
+    signJarAddedManifestEntries = [
+            'Codebase': 'http://jaga.sti.org',
+            'Permissions': 'all-permissions',
+            'Application-Name': "${project.name}"
+    ]
+    signJarParams = [alias: 'myalias', storepass: 'mystorepass']
+    desc = {
+        'application-desc'('main-class': "${project.jnlp.mainClassName}") {
+            argument('-verbose')
+        }
+    }
+}
+
+task genkey << {
+    ant.genkey(alias: 'myalias', storepass: 'mystorepass', dname: 'CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US')
+}
+
+
+war {
+    from 'build/jnlp'
+}
+
+task createWarAndRun << {
+    tasks.clean.execute()
+    tasks.build.execute()
+    tasks.createWebstartDir.execute()
+    tasks.war.execute()
+    tasks.jettyRunWar.execute()
+}
