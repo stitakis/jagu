@@ -4,7 +4,6 @@ apply plugin: 'eclipse'
 apply plugin: 'war'
 apply plugin: 'jetty'
 apply plugin: "de.gliderpilot.jnlp"
-apply plugin: "org.ajoberstar.grgit"
 
 sourceCompatibility = '1.8'
 
@@ -15,12 +14,6 @@ sourceSets {
             srcDir 'src/java/service'
 
         }
-//        resources {
-//            srcDir 'src/resources'
-//        }
-//        webapp {
-//            srcDir 'src/webapp'
-//        }
     }
     test {
         java {
@@ -40,7 +33,6 @@ buildscript {
 
     dependencies {
         classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:+'
-        classpath "org.ajoberstar:gradle-git:1.2.0"
     }
 }
 
@@ -50,11 +42,6 @@ repositories {
   maven {
       url "https://repo.eclipse.org/content/groups/releases/"
   }
-//  maven {
-//      url "https://plugins.gradle.org/"
-//  }
-//  maven {
-//  }
 }
 
 dependencies {
@@ -130,3 +117,15 @@ task genkey << {
     ant.genkey(alias: 'myalias', storepass: 'mystorepass', dname: 'CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US')
 }
 
+
+war {
+    from 'build/jnlp'
+}
+
+task createWarAndRun << {
+    tasks.clean.execute()
+    tasks.build.execute()
+    tasks.createWebstartDir.execute()
+    tasks.war.execute()
+    tasks.jettyRunWar.execute()
+}
