@@ -1,8 +1,8 @@
-package org.sti.jaga;
+package org.sti.jagu;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.sti.jaga.application.Service;
+import org.sti.jagu.application.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class Bootstraper {
     }
 
     public static Service createServiceInstance(ClassLoader cl) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        Class cls = cl.loadClass("org.sti.jaga.app.service.MainService");
+        Class cls = cl.loadClass("org.sti.jagu.app.service.MainService");
         Service service = (Service)cls.newInstance();
 //        Assert.assertNotNull(service);
         return service;

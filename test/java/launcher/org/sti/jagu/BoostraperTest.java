@@ -1,10 +1,10 @@
-package org.sti.jaga;
+package org.sti.jagu;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.sti.jaga.application.Service;
+import org.sti.jagu.application.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class BoostraperTest {
     public void testLoadService() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 
         try {
-            Class cls = this.getClass().getClassLoader().loadClass("org.sti.jaga.app.service.MainService2");
+            Class cls = this.getClass().getClassLoader().loadClass("org.sti.jagu.app.service.MainService2");
             Assert.fail("This test failed because MainService should is available in the classpath, it actually should not because it will be loaded at runtime instead!");
         } catch (Exception ex) {
             // This is fine: normal behaviour to get here

@@ -1,7 +1,7 @@
-package org.sti.jaga.itest;
+package org.sti.jagu.itest;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.sti.jaga.GitRepoTestHelper;
+import org.sti.jagu.GitRepoTestHelper;
 
 import java.io.IOException;
 

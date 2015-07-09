@@ -1,4 +1,4 @@
-package org.sti.jaga;
+package org.sti.jagu;
 
 import org.apache.commons.io.FileUtils;
 

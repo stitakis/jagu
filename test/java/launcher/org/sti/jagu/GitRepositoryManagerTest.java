@@ -1,4 +1,4 @@
-package org.sti.jaga;
+package org.sti.jagu;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.*;

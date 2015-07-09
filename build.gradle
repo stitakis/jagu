@@ -86,22 +86,22 @@ stopKey = 'foo'
 
 
 task createRemoteBareGitRepo(type:JavaExec) {
-    main = 'org.sti.jaga.itest.CreateBareRemoteGitRepoUtil'
+    main = 'org.sti.jagu.itest.CreateBareRemoteGitRepoUtil'
     classpath = files(sourceSets.main.runtimeClasspath,sourceSets.test.runtimeClasspath)
 }
 
 task initializeRemoteGitRepoUtil(type:JavaExec) {
-    main = 'org.sti.jaga.itest.InitializeRemoteGitRepoUtil'
+    main = 'org.sti.jagu.itest.InitializeRemoteGitRepoUtil'
     classpath = files(sourceSets.main.runtimeClasspath,sourceSets.test.runtimeClasspath)
 }
 
 task executeLauncher(type:JavaExec) {
-    main = 'org.sti.jaga.Launcher'
+    main = 'org.sti.jagu.Launcher'
     classpath = sourceSets.main.runtimeClasspath
 }
 
 task updateRemoteGitRepoUtil(type:JavaExec) {
-    main = 'org.sti.jaga.itest.UpdateRemoteGitRepoUtil'
+    main = 'org.sti.jagu.itest.UpdateRemoteGitRepoUtil'
     classpath = files(sourceSets.main.runtimeClasspath,sourceSets.test.runtimeClasspath)
 }
 
@@ -149,12 +149,12 @@ task itest << {
 
 }
 
-mainClassName = "org.sti.jaga.Launcher"
+mainClassName = "org.sti.jagu.Launcher"
 
 
 jnlp {
     useVersions = true
-    mainClassName = 'org.sti.jaga.Launcher'
+    mainClassName = 'org.sti.jagu.Launcher'
     withXml {
         information {
             title project.name
@@ -165,7 +165,7 @@ jnlp {
         }
     }
     signJarAddedManifestEntries = [
-            'Codebase': 'http://jaga.sti.org',
+            'Codebase': 'http://jagu.sti.org',
             'Permissions': 'all-permissions',
             'Application-Name': "${project.name}"
     ]

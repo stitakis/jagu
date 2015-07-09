@@ -1,4 +1,4 @@
-package org.sti.jaga;
+package org.sti.jagu;
 
 /**
  * Created by stitakis on 02.06.15.

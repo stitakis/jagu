@@ -1,12 +1,11 @@
-package org.sti.jaga.itest;
+package org.sti.jagu.itest;
 
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.PushResult;
-import org.sti.jaga.GitRepoTestHelper;
-import org.sti.jaga.GitRepositoryManager;
-import org.sti.jaga.TestUtil;
+import org.sti.jagu.GitRepoTestHelper;
+import org.sti.jagu.GitRepositoryManager;
+import org.sti.jagu.TestUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -17,13 +16,13 @@ import java.util.Properties;
 /**
  * Created by stitakis on 02.07.15.
  */
-public class InitializeRemoteGitRepoUtil {
+public class UpdateRemoteGitRepoUtil {
 
     public static void main(String[] args) {
 
         try {
             // Clone remote bare repo
-            final String repoDir = "out/remote-repo";
+            final String repoDir = "out/remote-repo2";
             TestUtil.removeAndCreateFolder(repoDir);
 
             GitRepositoryManager repositoryManager = new GitRepositoryManager(new File(repoDir), 10000);
@@ -53,7 +52,7 @@ public class InitializeRemoteGitRepoUtil {
 
     public static void addFilesToRemoteRepo(Git git, String repoDir) throws IOException, GitAPIException {
 
-        File from = new File("artifacts/service-v0_1.jar");
+        File from = new File("artifacts/service-v0_2.jar");
         File to = new File(repoDir + "/" + from.getName());
         Files.copy(from.toPath(), to.toPath());
         GitRepoTestHelper.addAndCommit(git, ".", "Added file: " + to.getName());
@@ -64,7 +63,7 @@ public class InitializeRemoteGitRepoUtil {
         Properties props = new Properties();
         props.put("classpath", to.getName());
 
-        props.store(fileWriter, "classpath for service-v0_1");
+        props.store(fileWriter, "classpath for service-v0_2");
 
         GitRepoTestHelper.addAndCommit(git, ".", "Added file: " + classpath.getName());
 

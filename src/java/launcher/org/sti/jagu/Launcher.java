@@ -1,4 +1,4 @@
-package org.sti.jaga;
+package org.sti.jagu;
 
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -13,7 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.sti.jaga.application.Service;
+import org.sti.jagu.application.Service;
 
 import java.io.File;
 import java.io.FileReader;

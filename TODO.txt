@@ -1,4 +1,4 @@
-Jaga: a task that demostrates and fully automate the java application git updater
+jagu: a task that demostrates and fully automate the java application git updater
 
 DONE:
 1. Add gradle
