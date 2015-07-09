@@ -57,18 +57,6 @@ public class GitRepoTestHelper {
     }
 
 
-//    public void addFilesToRemoteRepo() throws IOException, GitAPIException {
-//
-////        creatBareRepo();
-//
-//        File from = new File("lib//commons-codec-1.4.jar");
-//        File to = new File(repoDir + "//" + "commons-codec-1.4.jar");
-//        Files.copy(from.toPath(), to.toPath());
-//
-//        addAndCommit(".", "Added file: " + to.getName());
-//
-//    }
-
     public void addAndCommit(String filePattern, String comment) throws GitAPIException {
         // run the add
         git.add()

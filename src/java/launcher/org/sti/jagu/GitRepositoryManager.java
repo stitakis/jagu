@@ -34,7 +34,7 @@ public class GitRepositoryManager implements RepositoryManager {
             @Override
             public void run() {
                 try {
-//                    if (!(c++>20) && !updateAvailable()) {
+
                     if (!updateAvailable()) {
                         return;
                     }
@@ -65,14 +65,10 @@ public class GitRepositoryManager implements RepositoryManager {
     @Override
     public Git cloneRemoteRepository(URI remoteRepo) throws GitAPIException {
 
-//        System.out.println("Cloning from " + remoteRepo.toString() + " to " + dir);
-
         return Git.cloneRepository()
                 .setURI(remoteRepo.toString())
                 .setDirectory(dir)
                 .call();
-//        System.out.println("Done clone!");
-
     }
 
     @Override

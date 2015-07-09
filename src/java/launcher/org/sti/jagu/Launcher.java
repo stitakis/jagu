@@ -126,9 +126,7 @@ public class Launcher extends Application {
         versionLabel.textProperty().bind(version);
         version.setValue("Version: Unknown!");
         updateButton.setDisable(false);
-//        updateButton.setVisible(true);
         updateButton.visibleProperty().bind(updateAvailableProperty);
-//        updateAvailableProperty.setValue(true);
         updateButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {

@@ -15,18 +15,8 @@ public class BoostraperTest {
 
     private Bootstraper bootstraper;
 
-//    private static String TIMESTAMP = String.valueOf(System.currentTimeMillis());
-//    private String remote = "out//remote-jars-repo_" + TIMESTAMP;
-//    private String local = "out//local-repo_" + TIMESTAMP;
-
     @Before
     public void setup() throws IOException, GitAPIException {
-//        Assert.assertTrue(remote + " not created", removeAndCreateFolder(remote));
-//        addFilesToRemoteRepo(remote);
-//
-//        Assert.assertTrue(local + " not created", removeAndCreateFolder(local));
-//        cloneRepository(remote, local);
-
     }
 
     @Test
