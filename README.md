@@ -6,7 +6,7 @@ It is not perfect, bug free nor completed. The code was not reviewed or improved
 
 How to clone it?
 
-```git clone https://...
+```git clone https://github.com/stitakis/jagu.git
 
 How to build it?
 
