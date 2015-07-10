@@ -1,23 +1,7 @@
 jagu: a task that demostrates and fully automate the java application git updater
 
-DONE:
-1. Add gradle
-2. Setup git-over-http:
- - see: http://stackoverflow.com/questions/26734933/how-to-set-up-git-over-http
-3. Create a Java FX App
-  - As user I would like to update my app if an update is available
-4. Create a Java FX App
-  - As user I would like to update my app if an update is available
-    - Gradle:
-       - Create a gradle task to initialize the remote repo
-       - Remote repo will be reset to initial status (commit)
-       - Remote repo will be updated to another status
-
-DONE webapp branch:
-5. Create a war with a webstart app with gradle that includes
-    - jnlp file that start the launcher/bootstraper
-6. Deploy to jetty and start it with gradle
-7. Create a task that calls build, createWebStart (creatas jnlp), war and jettyStartWar
+TODO:
+...
 
 
 NOTES:
