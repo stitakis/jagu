@@ -1,7 +1,7 @@
 JAGU (Java Application Git Updater)
 -----------------------------------
 
-JAGU is an example application that demostrates how to use git repositories to distribute updates.
+JAGU is an java example that demostrates how to use git to distribute application updates to java clients.
 It is not perfect, bug free nor completed. The code was not reviewed or improved. It could be far better. It is the result of trying to do something useful with less available time while commuting from home to work office. :-)
 
 How to clone it?
@@ -46,5 +46,5 @@ Other features could be implemented...
 
 Who could use this update strategy?
 
-Any java application that would need a simple way to distribute updates.
+Any java clapplication that would need a simple way to distribute updates.
 
